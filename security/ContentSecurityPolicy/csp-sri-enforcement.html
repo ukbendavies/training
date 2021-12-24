@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta http-equiv='Content-Security-Policy'
+          content="default-src 'none';
+          script-src 'self' 'sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==';
+          connect-src 'none';
+          img-src 'self';
+          font-src https://fonts.gstatic.com;
+          style-src 'self' https://fonts.googleapis.com;
+          base-uri 'self';
+          form-action 'none';
+        ">
+    <title>Content Security Policy (CSP)</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href='https://fonts.gstatic.com' rel='preconnect' crossorigin>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono'>
+    <link rel='stylesheet' type='text/css' media='screen' href='css/csp.sameorigin.css'>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js' integrity='sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==' crossorigin='anonymous' referrerpolicy='no-referrer'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js' integrity='sha512-BROKENQWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==' crossorigin='anonymous' referrerpolicy='no-referrer'></script>
+</head>
+<body>
+    <h1>Understanding Content Security Policy (CSP)</h1>
+
+    <p>
+        <h2>tl;dr</h2>
+        <ul>
+            <li>CSP helps mitigate Cross Site Scripting (XSS) attacks.</li>
+            <li>Should be used as part of a defense in depth strategy.</li>
+            <li>In essence policies define an allow-list for authorizing use of client (browser) technology such as java script, css, fonts, ...</li>
+        </ul>
+    </p>
+
+    <p>
+    <h2>Description</h2>
+    Making this page has helped me understand Content Security Policy by building a real world example that enables only required capabilities and mitigates possible XSS attack vectors by 
+    disabling all non essential functionality. My requirements included: loading a same-origin css, a font family from the Google CDN and jquery from the Cloudflare CDN. Using the meta tag approach to define a CSP 
+    policy for this single html page met the goal.
+    </p>
+    <p>
+    Furthermore I wanted to demonstrate a real world use case by applying a very restrictive policy to protect the 'jquery library' resource that is downloaded from the 
+    Cloudflare CDN by using Subresource Integrity (SRI) and a less restrictive policy to load the Roberto font family from Google. When viewed in the web browser, demonstrate 
+    how CSP policy is applied and how the affects can be observed using standard in-browser developer tools.
+    </p>
+    <p>
+        <h3>Observing CSP policy</h3>
+        <ul>
+            <li>Open Chrome -> Developer Tools (F12) -> Network view</li>
+            <li>Refresh this page observing the Network view</li>
+            <li>Verify CSP policy has been successfully applied.</li>
+            <li>1st jquery script should load successfully: integrity hashes match</li>
+            <li>2nd jquery script <b>must fail to load and can be observed as '(blocked:csp)' in the status column</b> because the 'BROKEN' integrity does not match that 
+                required by the 'script-src' policy.</li>
+            <li>Can you see 1, 2, 3 along the sections headers? This indicates the same origin CSS has been applied successfully!</li>
+            <li>Fonts should have loaded and been applied from the CSS; this can be observed as type: font from teh network trace.</li>
+        </ul>
+    </p>
+
+    <p>
+        <h3>Additional Notes</h3>
+        <ul>
+            <li>Always define: default-src 'none' or 'self'. Failing to set this is the same as allowing access to all resources for any '*-src' directive.</li>
+            <li>Single Quotes are evaluated as part of CSP Meta tag policies.</li>
+            <li>Ideally CSP is applied via response headers as a site/application wide process. Note that some directives aren't supported using meta tags; e.g. sandbox. However 
+                the meta tag approach is better than not using CSP and can be a helpful approach if headers cannot be set or you want specific policy for a particular page.</li>
+            <li>Correct use of the 'integrity' attribute for script blocks is recommended regardless whether or not using CSP.</li>
+            <li>'script-src' should include a valid integrity hash that matches the Script block integrity attribute, and must evaluate to the actual script hash rules, or it will get 
+                blocked from loading. Fundamentally this is exactly the reason to implement SRI and CSP to prevent unknown/unintended modifications.</li>
+            <li>Use of inline style or scripts should be avoided. Always load resources from external entities, this is generally a good practice.</li>
+        </ul>
+    </p>
+
+    <p>
+        <h3>References</h3>
+        <ul>
+            <li>[mozilla.org] <a href="https://hacks.mozilla.org/2016/02/implementing-content-security-policy">Mozillas take on implementing CSP</a></li>
+            <li>[developers.google.com] <a href="https://developers.google.com/web/fundamentals/security/csp">CSP Introduction by Mike West</a></li>
+            <li>[content-security-policy.com] <a href="https://content-security-policy.com">Brief overview of directives and current supported implementation</a></li>
+        </ul>
+    </p>
+
+</body>
+</html>
