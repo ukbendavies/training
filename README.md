@@ -2,9 +2,9 @@
 
 My personal training and a place for me to gather together interesting articles along the way.
 
-To view any of the html examples, sync this repo and open the html in a local browser. If viewed on github the html does not render inline.
+To view or use the examples: please sync this repo and open in a local client e.g. Chrome / Edge. You can view the html code on github however the html does not render inline.
 
-I hope you find this as interesting as I do and if this helps you out or you'd like to contribute that is great too, all licensed as MIT so do what you need with my content thanks.
+I hope you find this research as interesting as I do and I hope it helps you out or you'd like to contribute it would be great to get your insights too. I have licensed the repo as MIT so please do what you like with my content thanks and give me a star if you find this useful.
 
 ## Topics include
 
